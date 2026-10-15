@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICT Benefits and Future Quiz — CAP31101 · LUANAR Bunda</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f13;
+  --surface: #16181f;
+  --surface2: #1e2029;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0f0f0;
+  --muted: #8a8fa8;
+  --accent: #2ecc7e;
+  --accent2: #1abc9c;
+  --green: #2ecc7e;
+  --red: #ff5c6a;
+  --amber: #ffbb3d;
+  --pill-bg: rgba(46,204,126,0.12);
+  --pill-border: rgba(46,204,126,0.3);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.65; min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(46,204,126,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(46,204,126,0.03) 1px, transparent 1px);
+  background-size: 40px 40px; pointer-events: none; z-index: 0;
+}
+.wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 0 20px 80px; }
+.screen { display: none; animation: fadeUp 0.4s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: 0.05em; color: var(--accent); }
+.nav-logo span { color: var(--muted); font-weight: 400; }
+.nav-links { display: flex; gap: 6px; }
+.nav-btn { background: transparent; border: 1px solid var(--border2); color: var(--muted); padding: 6px 14px; border-radius: 40px; font-size: 12px; font-family: var(--font-body); cursor: pointer; transition: all 0.2s; }
+.nav-btn:hover, .nav-btn.active { border-color: var(--accent); color: var(--accent); background: var(--pill-bg); }
+.hero { padding: 60px 0 40px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--pill-bg); border: 1px solid var(--pill-border); color: var(--accent); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 40px; margin-bottom: 28px; }
+.hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+h1 { font-family: var(--font-display); font-size: clamp(34px, 6vw, 54px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 18px; }
+h1 em { font-style: normal; color: var(--accent); }
+.hero-sub { font-size: 15px; color: var(--muted); max-width: 480px; margin-bottom: 36px; line-height: 1.7; }
+.hero-stats { display: flex; gap: 28px; margin-bottom: 40px; }
+.stat-n { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text); }
+.stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+.register-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 32px; margin-bottom: 40px; }
+.register-card h2 { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.register-card p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-row.full { grid-template-columns: 1fr; }
+label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+input, select { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-family: var(--font-body); font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
+input:focus, select:focus { border-color: var(--accent); }
+input::placeholder { color: var(--muted); }
+select option { background: var(--surface2); }
+.topic-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.topic-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); padding: 6px 14px; border-radius: 40px; font-size: 12px; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+.topic-toggle.on { background: var(--pill-bg); border-color: var(--pill-border); color: var(--accent); }
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-body); font-size: 14px; font-weight: 500; padding: 11px 22px; border-radius: 40px; cursor: pointer; border: none; transition: all 0.2s; }
+.btn-primary { background: var(--accent); color: #0e0f13; font-weight: 700; }
+.btn-primary:hover { background: #3de88f; transform: translateY(-1px); }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+.btn-ghost:hover { color: var(--text); background: var(--surface2); }
+.btn-sm { padding: 7px 16px; font-size: 13px; }
+.progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.progress-label { font-size: 12px; color: var(--muted); }
+.progress-score { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--accent); }
+.progress-track { height: 3px; background: var(--surface2); border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 3px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.q-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 28px 28px 20px; margin-bottom: 16px; }
+.q-section-tag { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--pill-bg); border: 1px solid var(--pill-border); padding: 3px 10px; border-radius: 40px; margin-bottom: 14px; }
+.q-text { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 22px; }
+.options { display: grid; gap: 9px; }
+.opt-btn { display: flex; align-items: flex-start; gap: 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 13px 16px; text-align: left; cursor: pointer; width: 100%; font-family: var(--font-body); font-size: 14px; color: var(--text); transition: all 0.2s; line-height: 1.5; }
+.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(46,204,126,0.06); }
+.opt-btn:disabled { cursor: default; }
+.opt-letter { min-width: 24px; height: 24px; border-radius: 6px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--muted); font-family: var(--font-display); flex-shrink: 0; margin-top: 1px; }
+.opt-btn.correct { border-color: var(--green); background: rgba(46,204,126,0.08); }
+.opt-btn.correct .opt-letter { background: var(--green); color: #0e0f13; }
+.opt-btn.wrong { border-color: var(--red); background: rgba(255,92,106,0.08); }
+.opt-btn.wrong .opt-letter { background: var(--red); color: #fff; }
+.feedback-box { border-radius: 10px; padding: 14px 16px; font-size: 13px; line-height: 1.65; margin-bottom: 14px; display: none; }
+.feedback-box.correct { background: rgba(46,204,126,0.1); border: 1px solid rgba(46,204,126,0.3); color: #7ef0b0; }
+.feedback-box.wrong { background: rgba(255,92,106,0.1); border: 1px solid rgba(255,92,106,0.3); color: #ffa0a8; }
+.feedback-box strong { display: block; margin-bottom: 4px; font-family: var(--font-display); font-size: 13px; }
+.discussion-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 16px; display: none; }
+.discussion-section h4 { font-family: var(--font-display); font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+.comments-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
+.comment { background: var(--surface2); border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+.comment-author { font-weight: 500; color: var(--accent); font-size: 12px; margin-bottom: 3px; }
+.comment-text { color: var(--text); line-height: 1.5; }
+.comment-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.comment-input-row { display: flex; gap: 8px; }
+.comment-input-row input { flex: 1; }
+.no-comments { font-size: 12px; color: var(--muted); font-style: italic; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; }
+.result-hero { text-align: center; padding: 60px 0 40px; }
+.result-ring { width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(var(--accent) var(--pct, 0%), var(--surface2) 0%); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 0 40px rgba(46,204,126,0.2); }
+.result-ring-inner { width: 108px; height: 108px; border-radius: 50%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.result-pct { font-family: var(--font-display); font-size: 32px; font-weight: 800; }
+.result-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.result-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+.result-sub { color: var(--muted); max-width: 420px; margin: 0 auto 32px; font-size: 14px; line-height: 1.65; }
+.result-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+.breakdown-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 18px; text-align: center; }
+.breakdown-n { font-family: var(--font-display); font-size: 28px; font-weight: 700; }
+.breakdown-n.green { color: var(--green); }
+.breakdown-n.red { color: var(--red); }
+.breakdown-n.amber { color: var(--amber); }
+.breakdown-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; }
+.lb-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
+.lb-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.lb-header h3 { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
+.lb-row { display: flex; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.lb-row:last-child { border-bottom: none; }
+.lb-row:hover { background: var(--surface2); }
+.lb-rank { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--muted); width: 24px; text-align: center; flex-shrink: 0; }
+.lb-rank.gold { color: #ffd700; } .lb-rank.silver { color: #c0c0c0; } .lb-rank.bronze { color: #cd7f32; }
+.lb-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.lb-info { flex: 1; }
+.lb-name { font-size: 14px; font-weight: 500; }
+.lb-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.lb-score-wrap { text-align: right; }
+.lb-score { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--accent); }
+.lb-pct { font-size: 11px; color: var(--muted); }
+.lb-empty { padding: 36px 24px; text-align: center; color: var(--muted); font-size: 13px; }
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 40px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+.badge-you { background: rgba(46,204,126,0.15); color: var(--accent); border: 1px solid var(--pill-border); }
+.text-muted { color: var(--muted); } .text-center { text-align: center; } .flex-gap { display: flex; gap: 10px; flex-wrap: wrap; }
+::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+@media(max-width: 560px) { .form-row { grid-template-columns: 1fr; } .result-breakdown { grid-template-columns: 1fr 1fr; } h1 { font-size: 30px; } .q-text { font-size: 16px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="nav-logo">CAP31101<span>/computer-systems</span></div>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="showScreen('home')">Quiz</button>
+      <button class="nav-btn" onclick="showScreen('leaderboard')">Leaderboard</button>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <div class="hero">
+      <div class="hero-tag">CAP31101 · ONE % STUDY HUB · LUANAR</div>
+      <h1>Benefits, Challenges<br>&amp; the <em>Future of ICT</em></h1>
+      <p class="hero-sub">60 questions built from your Lecture 3 slides: ICT in society, types of computer users, the digital divide, benefits and challenges, future trends and ethics. Compete, discuss, and track your rank.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-n">60</div><div class="stat-l">Questions</div></div>
+        <div class="stat"><div class="stat-n">10</div><div class="stat-l">Topics</div></div>
+        <div class="stat"><div class="stat-n" id="stat-players">0</div><div class="stat-l">Attempts</div></div>
+      </div>
+    </div>
+    <div class="register-card">
+      <h2>Register to start</h2>
+      <p>Your name and score will appear on the ONE % Study Hub leaderboard.</p>
+      <div class="form-row">
+        <div><label for="inp-name">Full name</label><input type="text" id="inp-name" placeholder="e.g. Chisomo Phiri"></div>
+        <div><label for="inp-reg">Reg. number</label><input type="text" id="inp-reg" placeholder="e.g. 2501013**"></div>
+      </div>
+      <div class="form-row full">
+        <div>
+          <label>Filter topics (tap to deselect)</label>
+          <div class="topic-grid" id="topic-grid"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="width:100%;justify-content:center;margin-top:4px">Start quiz →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div style="padding-top: 24px;">
+      <div class="progress-header">
+        <span class="progress-label" id="prog-label">Question 1 of 60</span>
+        <span class="progress-score" id="prog-score">0 pts</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="q-card">
+        <div class="q-section-tag" id="q-section"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="options" id="options"></div>
+      </div>
+      <div class="feedback-box" id="feedback"></div>
+      <div class="discussion-section" id="discussion-section">
+        <h4>💬 Group discussion</h4>
+        <div class="comments-list" id="comments-list"></div>
+        <div class="comment-input-row">
+          <input type="text" id="comment-input" placeholder="Add your thought…" maxlength="200" onkeydown="if(event.key==='Enter')postComment()">
+          <button class="btn btn-ghost btn-sm" onclick="postComment()">Post</button>
+        </div>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn btn-ghost" onclick="showScreen('home')">← Exit</button>
+        <button class="btn btn-primary" id="next-btn" onclick="nextQ()" style="display:none">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="result-hero">
+      <div class="result-ring" id="result-ring">
+        <div class="result-ring-inner">
+          <div class="result-pct" id="result-pct">0%</div>
+          <div class="result-label">score</div>
+        </div>
+      </div>
+      <div class="result-title" id="result-title">Well done!</div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-breakdown">
+        <div class="breakdown-card"><div class="breakdown-n green" id="bd-correct">0</div><div class="breakdown-l">Correct</div></div>
+        <div class="breakdown-card"><div class="breakdown-n red" id="bd-wrong">0</div><div class="breakdown-l">Wrong</div></div>
+        <div class="breakdown-card"><div class="breakdown-n amber" id="bd-total">0</div><div class="breakdown-l">Total</div></div>
+      </div>
+      <div class="flex-gap" style="justify-content:center">
+        <button class="btn btn-ghost" onclick="restartQuiz()">Retry</button>
+        <button class="btn btn-primary" onclick="showScreen('leaderboard')">View leaderboard →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div id="screen-leaderboard" class="screen">
+    <div style="padding-top: 32px;">
+      <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 800; margin-bottom: 6px;">Leaderboard</h2>
+      <p class="text-muted" style="font-size: 13px; margin-bottom: 28px;">ONE % Study Hub — CAP31101 Lecture 3 rankings.</p>
+      <div class="lb-card">
+        <div class="lb-header"><h3>Top scores</h3><span class="text-muted" style="font-size:12px" id="lb-count">0 attempts</span></div>
+        <div id="lb-rows"></div>
+      </div>
+      <div class="text-center"><button class="btn btn-ghost" onclick="showScreen('home')">Take the quiz →</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── QUESTION BANK — built from CAP31101 Lecture 3 slides ───
+// Format: correct answer is always stored separately, randomized at runtime
+const RAW=[];
+function Q(s,q,c,w,e){RAW.push({s,q,correct:c,wrong:w,exp:e});}
+/* Education & Healthcare */
+Q("Education & Healthcare","Which tool is a Learning Management System (LMS) named in the lecture?","Moodle",["PubMed","Khan Academy","Google Scholar"],"Moodle and Blackboard are LMS used for course management. PubMed and Google Scholar are research databases.");
+Q("Education & Healthcare","Why are simulations and virtual labs valuable in education?","They allow safe, cheap experiments in chemistry and biology",["They remove the need for any teaching staff at all in schools","They make real laboratories illegal for all students to use","They store the lecture slides on a local hard drive only"],"Virtual labs let students experiment safely and cheaply.");
+Q("Education & Healthcare","Electronic Health Records (EHR) mainly allow:","a patient's history read at once by authorised clinicians",["any member of the public reading the patient files freely","patients diagnosing their own illnesses at home alone","hospitals printing every record on paper each single day"],"EHRs make patient history instantly accessible to authorised clinicians.");
+Q("Education & Healthcare","Telemedicine allows:","patients in remote areas to consult doctors by video call",["doctors to treat patients without needing any patient data","hospitals to stop keeping any kind of patient records","drugs to be manufactured at the patient's own home"],"Telemedicine connects remote patients to doctors.");
+Q("Education & Healthcare","Computers speed up drug discovery by:","simulating how molecules interact",["printing prescriptions for each patient","storing appointment lists for clinics","booking beds in wards for admissions"],"Simulation of molecular interactions accelerates drug discovery by years.");
+Q("Education & Healthcare","Tracking outbreak patterns with COVID-19 dashboards and malaria maps is called:","disease surveillance",["hospital management","medical imaging","distance learning"],"Disease surveillance uses computers to track outbreaks.");
+/* Agriculture & Finance */
+Q("Agriculture & Finance","In precision farming, GPS-guided tractors can plant and harvest with:","centimetre accuracy, reducing waste",["kilometre accuracy, increasing waste","no accuracy, relying on luck alone","metre accuracy, needing a driver's guess"],"GPS guidance gives centimetre accuracy.");
+Q("Agriculture & Finance","Satellite images used to monitor crop health across whole regions are an example of:","remote sensing and GIS",["supply chain tracking","bioinformatics breeding","online banking"],"Remote sensing and GIS monitor crop health at regional scale.");
+Q("Agriculture & Finance","Which Malawian systems provide extension advice to smallholder farmers?","eAgrovet and eSoil",["Airtel Money and TNM Mpamba","QuickBooks and Sage","Booking.com and Airbnb"],"eAgrovet and eSoil are the Malawian systems named in the lecture.");
+Q("Agriculture & Finance","Tracking produce from farm to market so that post-harvest losses fall is called:","supply chain management",["precision breeding of new crop varieties","weather forecasting for planting decisions","risk assessment of bank loan applications"],"Supply chain management tracks produce and reduces post-harvest losses.");
+Q("Agriculture & Finance","Airtel Money and TNM Mpamba are examples of:","mobile money services for people without bank accounts",["national payment systems for large interbank transfers","accounting software for large companies and their auditors","tax systems used by national revenue authorities"],"Mobile money lets millions without bank accounts transfer money.");
+Q("Agriculture & Finance","RTGS (Real-Time Gross Settlement) is used for:","large interbank transfers",["small mobile airtime top-ups","crop disease detection","booking flights online"],"RTGS is a national payment system for large interbank transfers.");
+Q("Agriculture & Finance","Banks use AI-based risk assessment mainly to:","assess loan applications and detect fraud",["design new ATM machines for rural bank branches","schedule hospital appointments for patients in wards","forecast the weather for farmers in each district"],"Risk assessment helps banks assess loans and detect fraud.");
+/* Publishing, Science, Gov & Travel */
+Q("Publishing, Science & Government","Which software is listed for statistical analysis of research data?","R, SPSS, STATA and Python",["Netflix, Spotify and YouTube","Expedia, Booking.com and Airbnb","QuickBooks, Sage and SAP"],"The lecture lists R, SPSS, STATA and Python for statistical analysis.");
+Q("Publishing, Science & Government","Climate models, population models and economic forecasting are examples of:","simulation in science and research",["desktop publishing for books and magazines","e-government services for citizens and businesses","online booking platforms for hotels and flights"],"Simulation is vital for complex calculations in science.");
+Q("Publishing, Science & Government","The Internet has 'democratised' publishing because:","anyone can reach a global audience with blogs and podcasts",["only large newspapers are able to publish content online","publishing today always requires a printing press","only governments are allowed to create online content"],"Anyone can publish and reach a global audience.");
+Q("Publishing, Science & Government","Which is an e-Government service named in the lecture?","Applying for passports and business licences online",["Streaming films and music on demand from a library","Booking holiday flights and hotels from home","Editing photographs on a laptop with special software"],"e-Government portals let citizens apply for permits, passports and licences online.");
+Q("Publishing, Science & Government","In government, electronic voter registration and results transmission fall under:","elections",["tax collection","national statistics","civil registration"],"Elections use computers for registration, results transmission and voter roll verification.");
+Q("Publishing, Science & Government","Which organisation uses computers to collect, process and publish census data?","The National Statistical Office (NSO)",["The Malawi Revenue Authority (MRA)","The national airline and its booking office","The local bank branch in the district"],"The NSO handles national statistics and census data.");
+Q("Publishing, Science & Government","Virtual and Augmented Reality help in travel and tourism by:","offering immersive previews and virtual tours of places",["removing the need for any form of transport at all","printing airline tickets on paper for every passenger","replacing hotels with data centres in each city"],"VR/AR aid travel planning with virtual tours.");
+/* Types of computer users */
+Q("Types of Computer Users","Home or personal users mainly use computers for:","entertainment, communication and personal productivity",["running thousands of interconnected computers and servers","training large AI models on supercomputer clusters","handling millions of bank transactions every single day"],"Home users use laptops, smartphones, tablets and smart TVs for entertainment, communication and productivity.");
+Q("Types of Computer Users","Which group works from home or in a small business, using word processing and accounting?","Small Office / Home Office (SOHO) users",["Enterprise users of large organisations","Power users of specialised workstations","Mobile users who work in the field"],"SOHO users: word processing, accounting, email and website management.");
+Q("Types of Computer Users","Extension workers and journalists who use smartphones in the field are:","mobile users",["enterprise users","power users","SOHO users"],"Mobile users use computing devices primarily while on the move.");
+Q("Types of Computer Users","Video editors, software developers and data scientists are examples of:","power users",["home users","mobile users","SOHO users"],"Power users run demanding, specialised tasks.");
+Q("Types of Computer Users","Banks, ministries, hospitals and universities are examples of:","enterprise users",["home or personal users","mobile users in the field","power users of specialised tools"],"Enterprise users are large organisations with servers, networks, databases and cybersecurity systems.");
+Q("Types of Computer Users","At LUANAR, researchers running R, SPSS, GIS or Python on high-spec workstations are:","power users",["home/student users","office/admin users","mobile/field users"],"The lecture classes them as power users.");
+Q("Types of Computer Users","At LUANAR, central servers running the registry and student portal represent:","an enterprise computing context",["a home or student computing context","a mobile or field computing context","a power-user computing context"],"Central servers managing the registry, portal and databases are enterprise.");
+/* Digital divide */
+Q("The Digital Divide","The digital divide is the gap between:","those who have access to modern ICT and those who do not",["analog and digital computers in terms of speed","supercomputers and mainframes in terms of their cost","old and new software in terms of their price"],"It affects access to education, economic opportunity, healthcare and civic participation.");
+Q("The Digital Divide","A farmer who owns a smartphone but cannot use it effectively has a(n):","skills divide",["access divide","quality divide","device divide"],"The skills divide is having access but lacking the knowledge to use technology.");
+Q("The Digital Divide","A village with no computer or internet connection has a(n):","access divide",["skills divide","quality divide","device divide"],"Access divide: not having a computer or internet connection, particularly in rural areas.");
+Q("The Digital Divide","Using slow 2G mobile data instead of fibre broadband is an example of the:","quality divide",["access divide","skills divide","device divide"],"Quality divide: slow or unreliable internet.");
+Q("The Digital Divide","Having only a basic phone when a computer is needed for complex work is the:","device divide",["access divide","skills divide","quality divide"],"Device divide: basic phone vs a computer.");
+Q("The Digital Divide","Which statement about Malawi's digital divide is correct?","Mobile internet is the main access; fixed broadband is low outside cities",["Fixed broadband is widely available in all rural areas of the country","Rural areas have much higher connectivity than the big cities","Mobile phone use has been falling steadily over recent years"],"Rural connectivity is much lower than urban connectivity.");
+Q("The Digital Divide","Of 60 surveyed farmers, 45 own only a basic phone. What percentage face the device divide?","75%",["25%","45%","60%"],"45/60 = 0.75 = 75%.");
+/* Positive impact */
+Q("Positive Impacts","Which is a positive impact of ICT on communication?","Instant global communication at near-zero cost",["Slower communication between people across borders","Communication that is possible only through the post","Communication that is limited to one single country"],"Email, video calls, social media and messaging provide instant global communication.");
+Q("Positive Impacts","Automating repetitive tasks benefits workers by:","freeing them for more creative and analytical roles",["removing any need for human skills in workplaces","making sure they never need any retraining again","making their wages go up without any effort"],"Automation frees people for creative and analytical roles.");
+Q("Positive Impacts","Mobile money has helped economic development in Africa by:","bringing financial services to people with no bank accounts",["replacing all farming with cash trading across the whole of Africa","closing every bank branch across the whole African continent","removing the need for any national ID documents for citizens"],"Mobile money extended financial services to those who lacked bank accounts.");
+/* Challenges */
+Q("Challenges & Concerns","Which is a privacy concern raised in the lecture?","Governments and firms collect and analyse huge personal data sets",["Computers can store only very small amounts of data at a time","Browsing history is never recorded in any system or database","Personal data can never be sold, shared or analysed by firms"],"Digital activity leaves extensive data trails.");
+Q("Challenges & Concerns","SIM swapping, phishing and mobile money fraud are examples of:","cybercrime and security threats",["job displacement caused by new automation","environmental impact from discarded devices","digital publishing on blogs and podcasts"],"These are growing cybercrime threats in Africa.");
+Q("Challenges & Concerns","Which jobs are most at risk from automation?","Routine, repetitive work such as data entry",["Creative roles such as research and design work","Roles that call for ethical judgement alone","Roles that involve no repetition at all"],"Routine, repetitive work is most exposed; new jobs appear but workers need retraining.");
+Q("Challenges & Concerns","Excessive screen time can cause:","eye strain, poor posture and sleep disruption",["improved posture and better quality sleep","stronger eyesight and more regular exercise","lower anxiety among younger people"],"Health concerns include eye strain, sedentary lifestyle and blue-light sleep disruption.");
+Q("Challenges & Concerns","E-waste is described as:","one of the fastest-growing waste streams globally",["a rare waste stream that is shrinking very fast each year","a harmless material with no effect on the natural world","a waste produced only by the large mainframe computers"],"Discarded electronics are among the fastest-growing waste streams.");
+Q("Challenges & Concerns","Manufacturing electronic devices has an environmental cost because it:","needs rare earth metals and uses enormous energy",["uses no energy and no raw materials at all","produces no waste of any kind in factories","relies only on recycled paper and plant fibres"],"The lecture names rare earth metals and heavy energy use.");
+/* Future trends */
+Q("Future Trends: AI, IoT, 5G & Cloud","Large Language Models (LLMs) such as ChatGPT are described as:","a step change in human-computer interaction",["a replacement for the whole internet network","a new kind of mainframe computer for banks","an analog signal format for radio broadcasts"],"LLMs represent a step change in how people interact with computers.");
+Q("Future Trends: AI, IoT, 5G & Cloud","A farmer uses a phone camera to detect crop disease. This is an application of:","AI and machine learning",["quantum computing with qubits","a mainframe computer in a bank","fibre broadband internet access"],"AI will transform agriculture: disease detection, yield prediction, automated irrigation.");
+Q("Future Trends: AI, IoT, 5G & Cloud","A smart farm using soil sensors, drones and automated irrigation feeding a dashboard is an example of:","the Internet of Things (IoT)",["the digital divide between regions","desktop publishing for books and news","algorithmic bias in AI systems"],"IoT connects billions of embedded objects.");
+Q("Future Trends: AI, IoT, 5G & Cloud","5G networks offer speeds up to how many times faster than 4G?","100 times",["10 times","5 times","1,000 times"],"The lecture states up to 100 times faster than 4G, with much lower latency.");
+Q("Future Trends: AI, IoT, 5G & Cloud","A file takes 200 seconds to download on 4G. At 100 times the speed, the download time on 5G is:","2 seconds",["20 seconds","0.2 seconds","100 seconds"],"200/100 = 2 seconds.");
+Q("Future Trends: AI, IoT, 5G & Cloud","Which is an application enabled by 5G's low latency?","Remote surgery",["Printing on paper","Typing a document offline","Reading a paper newspaper"],"5G enables remote surgery, autonomous vehicles and massive IoT deployments.");
+Q("Future Trends: AI, IoT, 5G & Cloud","Cloud computing lets you:","access powerful applications and storage via the internet",["run all of your software only on your own local hardware","avoid ever being connected to any kind of network","keep all of your data only on a USB flash drive"],"Cloud benefits: access from anywhere, no costly local hardware, automatic updates and instant scalability.");
+Q("Future Trends: AI, IoT, 5G & Cloud","Which are major cloud providers named in the lecture?","Amazon Web Services, Microsoft Azure and Google Cloud",["Airtel Money, TNM Mpamba and Sage Accounting software","Moodle, Blackboard and the PubMed research database","QuickBooks, SAP and the RTGS payment system"],"AWS, Azure and Google Cloud are the major providers.");
+/* Quantum & AR/VR */
+Q("Quantum Computing, AR & VR","A quantum computer uses qubits, which can be:","0, 1, or both at once (superposition)",["only 0, with no other possible state","only 1, with no other possible state","only a decimal digit from 0 to 9"],"Qubits exploit superposition.");
+Q("Quantum Computing, AR & VR","Quantum computers are expected to be most powerful for:","specific problems such as cryptography and drug discovery",["every everyday task, including typing a short letter at home","printing and photocopying of documents at a busy office","playing recorded music on a phone or a speaker"],"They are exponentially more powerful for specific problems.");
+Q("Quantum Computing, AR & VR","In n qubits, the number of states that can be represented in superposition is 2^n. For 3 qubits this is:","8",["6","9","3"],"2^3 = 8.");
+Q("Quantum Computing, AR & VR","Pointing your phone at food to see nutritional information is an example of:","Augmented Reality (AR)",["Virtual Reality (VR)","quantum computing","cloud storage"],"AR overlays digital information on the real world.");
+Q("Quantum Computing, AR & VR","Virtual Reality (VR) is best described as:","fully immersive digital environments",["digital labels laid over a real scene","a type of mobile network for phones","a form of data storage on disks"],"VR is used for medical training, architectural design, gaming and education.");
+/* Ethics */
+Q("Ethics of Computer Use","Selling users' browsing history to advertisers raises which ethical issue?","Privacy",["Intellectual property","Algorithmic bias","Autonomous weapons"],"Privacy: should individuals control data collected about them?");
+Q("Ethics of Computer Use","Copying software or music without paying raises which issue?","Intellectual property",["Privacy of personal data","Access and equity in the digital world","Misinformation on social media sites"],"Intellectual property: who owns digital content?");
+Q("Ethics of Computer Use","Algorithmic bias refers to:","AI trained on biased data perpetuating discrimination",["computers running far too slowly to do any work","algorithms that always give correct and fair answers","sensors failing to collect any data in the field"],"Bias in hiring, lending and criminal justice can be perpetuated by AI.");
+Q("Ethics of Computer Use","The idea that tech firms build detailed user profiles to sell targeted advertising is called:","surveillance capitalism",["algorithmic bias","intellectual property","autonomous warfare"],"Surveillance capitalism raises ethical concerns about profiling users.");
+
+
+// ─── ENGINE ──────────────────────────────────────────────────────────────────
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const TOPICS = [...new Set(RAW.map(q => q.s))];
+const AVATARS = ['#2ecc7e','#1abc9c','#3498db','#9b59b6','#e67e22','#e74c3c','#f39c12','#16a085','#8e44ad','#2980b9'];
+
+let activeTopics = new Set(TOPICS);
+let quiz = [], cur = 0, score = 0, answered = false;
+let currentUser = {name:'', reg:''};
+let leaderboard = JSON.parse(localStorage.getItem('cap31101l3_lb') || '[]');
+let comments = JSON.parse(localStorage.getItem('cap31101l3_cmt') || '{}');
+
+function saveComments(){ localStorage.setItem('cap31101l3_cmt', JSON.stringify(comments)); }
+function saveLB(){ localStorage.setItem('cap31101l3_lb', JSON.stringify(leaderboard)); }
+
+// Randomize answer positions, ensure correct answer never appears in same slot twice in a row
+function buildQ(raw, prevAnsPos) {
+  const pool = [raw.correct, ...raw.wrong];
+  let opts, correctIdx, attempts = 0;
+  do {
+    opts = shuffle(pool);
+    correctIdx = opts.indexOf(raw.correct);
+    attempts++;
+  } while (correctIdx === prevAnsPos && attempts < 15);
+  return { s: raw.s, q: raw.q, opts, ans: correctIdx, exp: raw.exp };
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if(id==='leaderboard'){ renderLB(); document.querySelectorAll('.nav-btn')[1].classList.add('active'); }
+  else document.querySelectorAll('.nav-btn')[0].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function buildTopicGrid(){
+  const g = document.getElementById('topic-grid');
+  g.innerHTML = '';
+  TOPICS.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'topic-toggle on';
+    b.textContent = t;
+    b.onclick = function(){
+      if(activeTopics.has(t)){
+        if(activeTopics.size === 1) return;
+        activeTopics.delete(t); b.className='topic-toggle';
+      } else {
+        activeTopics.add(t); b.className='topic-toggle on';
+      }
+    };
+    g.appendChild(b);
+  });
+}
+
+function updateStatPlayers(){
+  document.getElementById('stat-players').textContent = leaderboard.length;
+}
+
+function startQuiz(){
+  const name = document.getElementById('inp-name').value.trim();
+  const reg = document.getElementById('inp-reg').value.trim();
+  if(!name){ alert('Please enter your name.'); return; }
+  currentUser = { name, reg };
+  const filtered = shuffle(RAW.filter(q => activeTopics.has(q.s)));
+  if(!filtered.length){ alert('Select at least one topic.'); return; }
+  quiz = []; let prev = -1;
+  filtered.forEach(r => { const q = buildQ(r, prev); prev = q.ans; quiz.push(q); });
+  cur = 0; score = 0; answered = false;
+  showScreen('quiz'); renderQ();
+}
+
+function renderQ(){
+  if(cur >= quiz.length){ endQuiz(); return; }
+  const q = quiz[cur];
+  const pct = (cur / quiz.length) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `Question ${cur+1} of ${quiz.length}`;
+  document.getElementById('prog-score').textContent = `${score} pts`;
+  document.getElementById('q-section').textContent = q.s;
+  document.getElementById('q-text').textContent = q.q;
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  ['A','B','C','D'].forEach((l,i) => {
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="opt-letter">${l}</span><span>${q.opts[i]}</span>`;
+    b.onclick = function(){ if(!answered) select(i, b); };
+    opts.appendChild(b);
+  });
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('discussion-section').style.display = 'none';
+  answered = false;
+  window.scrollTo(0,0);
+}
+
+function select(i, btn){
+  answered = true;
+  const q = quiz[cur];
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback');
+  if(i === q.ans){
+    btn.classList.add('correct'); score++;
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `<strong>✓ Correct!</strong>${q.exp}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `<strong>✗ Not quite.</strong>${q.exp}`;
+  }
+  fb.style.display = 'block';
+  document.getElementById('next-btn').style.display = 'inline-flex';
+  document.getElementById('prog-score').textContent = `${score} pts`;
+  showDiscussion(cur);
+}
+
+function nextQ(){ cur++; renderQ(); }
+
+function showDiscussion(idx){
+  const key = `q_${quiz[idx].q.slice(0,24).replace(/\W+/g,'_')}`;
+  document.getElementById('discussion-section').style.display = 'block';
+  renderComments(key);
+  document.getElementById('comment-input').dataset.key = key;
+}
+
+function renderComments(key){
+  const list = document.getElementById('comments-list');
+  const c = comments[key] || [];
+  if(!c.length){ list.innerHTML = '<div class="no-comments">No discussion yet — be the first.</div>'; return; }
+  list.innerHTML = c.map(cm => `
+    <div class="comment">
+      <div class="comment-author">${escHtml(cm.name)}${cm.reg?' <span style="color:var(--muted);font-weight:400">· '+escHtml(cm.reg)+'</span>':''}</div>
+      <div class="comment-text">${escHtml(cm.text)}</div>
+      <div class="comment-time">${cm.time}</div>
+    </div>`).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+function postComment(){
+  const inp = document.getElementById('comment-input');
+  const key = inp.dataset.key, text = inp.value.trim();
+  if(!text) return;
+  if(!comments[key]) comments[key] = [];
+  const now = new Date();
+  comments[key].push({ name: currentUser.name, reg: currentUser.reg, text,
+    time: now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString() });
+  saveComments(); inp.value = ''; renderComments(key);
+}
+
+function endQuiz(){
+  const total = quiz.length, pct = Math.round(score/total*100);
+  document.getElementById('result-ring').style.setProperty('--pct', pct+'%');
+  document.getElementById('result-pct').textContent = pct+'%';
+  document.getElementById('bd-correct').textContent = score;
+  document.getElementById('bd-wrong').textContent = total-score;
+  document.getElementById('bd-total').textContent = total;
+  let title, sub;
+  if(pct>=90){ title='Systems Expert! 💻'; sub='Exceptional command of ICT uses, the digital divide, future trends and ethics. Exam-ready.'; }
+  else if(pct>=75){ title='Well done! 🌱'; sub='Strong performance. Recheck the digital divide types and the user categories to reach 90%.'; }
+  else if(pct>=60){ title='Good foundation. 📚'; sub='You understand the basics. Focus on user types, the four digital divides and future trends, then retry.'; }
+  else if(pct>=40){ title='Keep studying. 🔍'; sub='Go back to the slides topic by topic. Start with ICT in daily life, then work through challenges and future trends.'; }
+  else { title='Back to the notes. 📖'; sub='Read each slide section carefully. Learn the definitions first, then attempt the quiz again.'; }
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+  const entry = { name: currentUser.name, reg: currentUser.reg, score, total, pct,
+    time: new Date().toLocaleString(), color: AVATARS[Math.abs(hashStr(currentUser.name))%AVATARS.length] };
+  leaderboard.push(entry);
+  leaderboard.sort((a,b)=>b.pct-a.pct||b.score-a.score);
+  saveLB(); updateStatPlayers(); showScreen('result');
+}
+
+function restartQuiz(){
+  const filtered = shuffle(RAW.filter(q => activeTopics.has(q.s)));
+  quiz = []; let prev = -1;
+  filtered.forEach(r => { const q = buildQ(r, prev); prev = q.ans; quiz.push(q); });
+  cur=0; score=0; answered=false; showScreen('quiz'); renderQ();
+}
+
+function renderLB(){
+  const rows = document.getElementById('lb-rows');
+  document.getElementById('lb-count').textContent = `${leaderboard.length} attempt${leaderboard.length!==1?'s':''}`;
+  if(!leaderboard.length){ rows.innerHTML='<div class="lb-empty">No attempts yet. Be the first!</div>'; return; }
+  const rc=['gold','silver','bronze'], re=['1st','2nd','3rd'];
+  rows.innerHTML = leaderboard.slice(0,20).map((e,i)=>{
+    const initials=e.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    const isYou=currentUser.name&&e.name===currentUser.name;
+    return `<div class="lb-row">
+      <div class="lb-rank ${rc[i]||''}">${i<3?re[i]:i+1}</div>
+      <div class="lb-avatar" style="background:${e.color}22;color:${e.color}">${initials}</div>
+      <div class="lb-info">
+        <div class="lb-name">${escHtml(e.name)} ${isYou?'<span class="badge badge-you">you</span>':''}</div>
+        <div class="lb-meta">${e.reg?escHtml(e.reg)+' · ':''}${e.time}</div>
+      </div>
+      <div class="lb-score-wrap">
+        <div class="lb-score">${e.score}/${e.total}</div>
+        <div class="lb-pct">${e.pct}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function hashStr(s){ let h=0; for(let c of s){h=((h<<5)-h)+c.charCodeAt(0);h|=0;} return h; }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+buildTopicGrid();
+updateStatPlayers();
+</script>
+</body>
+</html>
